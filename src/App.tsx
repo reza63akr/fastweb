@@ -34,6 +34,9 @@ export default function App() {
       </main>
       <Footer />
       <ScrollTopButton />
+      <div className="site-watermark" aria-hidden="true">
+        reza akbari
+      </div>
     </BrowserRouter>
   );
 }

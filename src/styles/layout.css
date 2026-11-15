@@ -573,6 +573,27 @@
   opacity: 1;
 }
 
+/* ---------- واترمارک برند ---------- */
+.site-watermark {
+  position: fixed;
+  left: clamp(12px, 2.5vw, 24px);
+  bottom: clamp(12px, 2.5vw, 24px);
+  z-index: 20;
+  padding: 7px 10px 8px;
+  border: 1px solid rgba(200, 169, 107, 0.16);
+  border-radius: var(--r-pill);
+  background: rgba(6, 7, 10, 0.3);
+  color: rgba(246, 236, 212, 0.42);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  line-height: 1;
+  letter-spacing: 0.15em;
+  pointer-events: none;
+  user-select: none;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
 /* ---------- واکنش‌گرایی ---------- */
 @media (max-width: 1180px) {
   .navbar__phone {
@@ -617,6 +638,14 @@
 }
 
 @media (max-width: 600px) {
+  .site-watermark {
+    left: 10px;
+    bottom: 10px;
+    padding: 6px 8px 7px;
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+  }
+
   .brand__sub {
     display: none;
   }

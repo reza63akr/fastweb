@@ -31,7 +31,7 @@ export const site = {
 
   /** شبکه‌های اجتماعی — قابل ویرایش */
   socials: [
-    { id: "instagram", label: "اینستاگرام", href: "https://instagram.com/fastweb96" },
+    { id: "instagram", label: "اینستاگرام", href: "https://www.instagram.com/fastweb9696/" },
     { id: "telegram", label: "تلگرام", href: "https://t.me/fastweb96" },
     { id: "bale", label: "بله", href: "https://ble.ir/fastweb96" },
     { id: "eitaa", label: "ایتا", href: "https://eitaa.com/fastweb96" },
