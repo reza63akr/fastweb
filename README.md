@@ -105,18 +105,14 @@ fastweb96-website/
 فرم سفارش و فرم تماس اعتبارسنجی سمت کلاینت دارند (نام، موبایل ایران، ایمیل، انتخاب‌های الزامی،
 توضیحات، حجم/نوع فایل تا ۱۰MB) و پیام موفقیت دقیقاً طبق متن درخواستی نمایش داده می‌شود.
 
-ارسال داده در `src/lib/leads.ts`:
-
-- اگر `site.endpoints.leads` خالی باشد (وضعیت فعلی)، درخواست در `localStorage`
-  با کلید `fastweb96:leads` نگه داشته می‌شود (مناسب دمو، بدون بک‌اند).
-- برای دریافت واقعی درخواست‌ها، آدرس یک endpoint را در `src/data/site.ts` قرار دهید:
-
-```ts
-endpoints: { leads: "/api/leads" }   // یا "https://example.com/api/leads"
-```
-
-درخواست به‌صورت `POST` با `FormData` (`source`, فیلدهای فرم و `attachment`) ارسال می‌شود؛
-با هر بک‌اندی (Express / Next / PHP / سرویس ایمیل) سازگار است.
+فقط فرم «ثبت سفارش» از `src/lib/leads.ts` به endpoint عمومی موجود در `src/data/site.ts`
+یعنی `https://fastweb96-m2vkzxu7.manus.space/api/order` با `POST` و JSON متنی ارسال می‌شود.
+نام، تلفن، ایمیل (اختیاری)، نوع کسب‌وکار، نوع سایت، بودجه و توضیحات به relay می‌رسند؛ relay
+اعتبارسنجی سرور را انجام می‌دهد و پیام را با bot تلگرام موجود ارسال می‌کند. فرم تماس و ظاهر سایت
+تغییری نکرده‌اند. فایل اختیاری در رابط انتخاب می‌شود اما محتوای آن به تلگرام منتقل نمی‌شود؛ این
+محدودیت پیش از ارسال و در پیام موفقیت اعلام می‌شود. اگر ارسال سفارش با خطا روبه‌رو شود، فرم موفق
+نشان داده نمی‌شود و کاربر پیام تلاش دوباره می‌بیند. Bot Token و Chat ID فقط در متغیرهای امن سمت
+سرور هستند و داخل bundle عمومی React قرار نمی‌گیرند.
 
 ---
 
@@ -132,15 +128,15 @@ endpoints: { leads: "/api/leads" }   // یا "https://example.com/api/leads"
 
 ## دامنه‌ی اختصاصی و انتشار
 
-هیچ آدرس داخلی یا محیط‌وابسته‌ای در کد hard-code نشده است؛ همه‌ی مسیرها نسبی‌اند.
+مسیر دارایی‌های داخلی همچنان نسبی‌اند؛ تنها مقصد فرم سفارش یک HTTPS endpoint عمومی است:
+`https://fastweb96-m2vkzxu7.manus.space/api/order`.
 
-1. `npm run build` → پوشه‌ی `dist/`
-2. آپلود `dist/` روی هر هاست/CDN (Nginx، Netlify، Vercel، GitHub Pages…)
-3. برای SPA بودن مسیرها، همه‌ی مسیرها به `index.html` ری‌رایت شوند:
-   - **Nginx:** `try_files $uri $uri/ /index.html;`
-   - **Netlify:** `/* /index.html 200`
-4. دامنه‌ی `.ir` را به هاست وصل کنید و در `public/robots.txt` / `public/sitemap.xml` مقدار
-   `https://fastweb96.ir` را با دامنه‌ی نهایی جایگزین کنید.
+1. push به `main` در repository `rezaa63/fastweb`، workflow موجود `.github/workflows/main.yml`
+   را اجرا می‌کند؛ Vite پوشه‌ی `dist/` را برای GitHub Pages می‌سازد.
+2. فایل `CNAME` دامنه‌ی اختصاصی `fastweb96.ir` را نگه می‌دارد؛ مسیرهای React/Vite با SPA fallback
+   موجود منتشر می‌شوند.
+3. API فقط فرم سفارش را می‌گیرد؛ سرور تنها originهای دقیق GitHub Pages و دامنهٔ `fastweb96.ir`
+   را مجاز می‌داند و هیچ credential تلگرام در frontend قرار نمی‌گیرد.
 
 > در حالت توسعه، Vite روی `0.0.0.0:3000` گوش می‌دهد و هاست‌های اضافی از طریق متغیر استاندارد
 > `__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS` مجاز می‌شوند (بدون هارد‌کد کردن دامنه).

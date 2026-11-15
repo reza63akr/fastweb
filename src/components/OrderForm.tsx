@@ -193,7 +193,7 @@ export function OrderForm() {
               </span>
               <h3 className="form-success__title">درخواست شما ثبت شد</h3>
               <p className="form-success__text">
-                اطلاعات این درخواست فقط در حافظه‌ی همین مرورگر ذخیره شده و برای تیم <span dir="ltr">FastWeb96</span> ارسال نشده است. برای ثبت واقعی سفارش، لطفاً از راه‌های تماس استفاده کنید.
+                متن درخواست شما به تلگرام FastWeb96 ارسال شد. اگر فایلی انتخاب کرده‌اید، محتوای فایل از طریق این فرم به تلگرام منتقل نمی‌شود.
               </p>
               <button type="button" className="btn btn--ghost btn--sm" onClick={resetForm}>
                 ثبت درخواست جدید
@@ -388,7 +388,7 @@ export function OrderForm() {
 
                 <div className="field field--full">
                   <label htmlFor="attachment">
-                    آپلود فایل یا نمونه مورد نظر <span className="field__hint">(اختیاری)</span>
+                    آپلود فایل یا نمونه مورد نظر <span className="field__hint">(اختیاری؛ محتوای فایل به تلگرام ارسال نمی‌شود)</span>
                   </label>
                   <label className={cx("upload", errors.file && "is-invalid")} htmlFor="attachment">
                     <span className="upload__icon">
@@ -427,7 +427,7 @@ export function OrderForm() {
                   {!submitting ? <Icon name="arrowLeftLong" size={18} /> : null}
                 </button>
                 <p className="form__note">
-                  اطلاعات شما فقط برای بررسی همین درخواست استفاده می‌شود.
+                  با ارسال فرم، اطلاعات متنی شما از طریق سرور امن به گفت‌وگوی تلگرام صاحب سایت فرستاده می‌شود؛ فایل انتخابی منتقل نمی‌شود.
                 </p>
               </div>
             </form>

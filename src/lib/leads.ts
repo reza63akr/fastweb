@@ -32,32 +32,58 @@ const storeLocally = (payload: LeadPayload): void => {
   }
 };
 
-/**
- * ارسال درخواست.
- *
- * اگر `site.endpoints.leads` تنظیم شده باشد، داده به همان آدرس ارسال می‌شود
- * (FormData — سازگار با بک‌اندهای Express/Next/PHP و سرویس‌های ایمیل).
- * در غیر این صورت درخواست در مرورگر نگه داشته می‌شود تا بعداً به بک‌اند متصل شود.
- */
+/** فرم سفارش را به relay تلگرام می‌فرستد؛ فرم تماس همان رفتار محلی قبلی را نگه می‌دارد. */
 export async function submitLead(payload: LeadPayload): Promise<LeadResult> {
-  storeLocally(payload);
+  if (payload.source !== "order") {
+    storeLocally(payload);
+    return { ok: true, storedLocally: true };
+  }
 
   const endpoint = site.endpoints.leads;
-  if (!endpoint) return { ok: true, storedLocally: true };
+  if (!endpoint) {
+    storeLocally(payload);
+    return {
+      ok: false,
+      storedLocally: true,
+      message: "اتصال فرم سفارش هنوز تنظیم نشده است؛ لطفاً با ما تماس بگیرید.",
+    };
+  }
 
-  const body = new FormData();
-  body.append("source", payload.source);
-  Object.entries(payload.fields).forEach(([key, value]) => body.append(key, value));
-  if (payload.file) body.append("attachment", payload.file);
+  const body = {
+    name: payload.fields.fullName?.trim() ?? "",
+    phone: payload.fields.phone?.trim() ?? "",
+    email: payload.fields.email?.trim() ?? "",
+    business: payload.fields.businessType ?? "",
+    siteType: payload.fields.siteType ?? "",
+    budget: payload.fields.budget ?? "",
+    details: payload.fields.projectDescription?.trim() ?? "",
+  };
 
   try {
-    const response = await fetch(endpoint, { method: "POST", body });
-    if (!response.ok) {
-      return { ok: false, storedLocally: true, message: "ارسال به سرور انجام نشد." };
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const result = (await response.json().catch(() => null)) as
+      | { ok?: boolean; message?: string }
+      | null;
+    if (!response.ok || result?.ok !== true) {
+      storeLocally(payload);
+      return {
+        ok: false,
+        storedLocally: true,
+        message: result?.message ?? "ارسال درخواست به تلگرام انجام نشد؛ لطفاً دوباره تلاش کنید.",
+      };
     }
-    return { ok: true, storedLocally: true };
+    return { ok: true, storedLocally: false };
   } catch {
-    return { ok: false, storedLocally: true, message: "اتصال به سرور برقرار نشد." };
+    storeLocally(payload);
+    return {
+      ok: false,
+      storedLocally: true,
+      message: "اتصال به سرور برقرار نشد؛ اطلاعات در این مرورگر نگه داشته شد. لطفاً دوباره تلاش کنید.",
+    };
   }
 }
 
