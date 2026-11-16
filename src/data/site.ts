@@ -51,7 +51,7 @@ export const site = {
 
   /** آدرس عمومی relay سفارش؛ هیچ توکن یا اطلاعات محرمانه‌ای در مرورگر قرار نمی‌گیرد. */
   endpoints: {
-    leads: "https://fastweb96-m2vkzxu7.manus.space/api/order",
+    leads: "https://fastweb96-bot.nivosite.workers.dev/lead",
   },
 } as const;
 
