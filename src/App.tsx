@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import ChatWidget from "./components/ChatWidget";
 import { Footer } from "./components/Footer";
 import { Navbar } from "./components/Navbar";
 import { ScrollManager } from "./components/ScrollManager";
@@ -32,8 +33,9 @@ export default function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
-      <Footer />
+           <Footer />
       <ScrollTopButton />
+      <ChatWidget />
       <div className="site-watermark" aria-hidden="true">
         reza akbari
       </div>
